@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrustClause™ | 지능형 위·수탁 계약 자동 생성 및 컴플라이언스 플랫폼</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 상단 글로벌 헤더 -->
+  <header class="top-header no-print">
+    <div class="brand-area">
+      <div class="brand-badge">REGTECH · LEGAL ENGINE</div>
+      <div class="brand-title-wrap">
+        <h1 class="brand-title">TrustClause™ <span class="brand-sub">위·수탁 계약 자동 생성 & 단점 개선 플랫폼</span></h1>
+        <p class="brand-desc">개인정보보호위원회 표준계약서(법 제26조) · 행정안전부/지자체 민간위탁 표준협약서 통합 거버넌스</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="btn btn-outline" id="btnOpenWizard" title="계약 성격 오판 방지를 위한 5문항 사전 진단">
+        <span class="icon">🧭</span> 계약 유형 적격성 진단
+      </button>
+      <button type="button" class="btn btn-outline" id="btnOpenResearch" title="학술논문·실태조사 및 PDR 문서 보기">
+        <span class="icon">📚</span> 논문·실태조사 & PDR
+      </button>
+      <button type="button" class="btn btn-secondary" id="btnDownloadPdr" title="PDR(제품요구사항 및 초기설계서) 마크다운 파일 다운로드">
+        <span class="icon">📐</span> PDR(.md) 다운로드
+      </button>
+      <button type="button" class="btn btn-secondary" id="btnExportDoc" title="MS Word 및 한글(HWP)에서 열 수 있는 .doc 파일 다운로드">
+        <span class="icon">📝</span> Word/한글(.doc) 저장
+      </button>
+      <button type="button" class="btn btn-primary" id="btnPrintPdf" title="A4 규격 계약서 인쇄 및 PDF 저장">
+        <span class="icon">🖨️</span> 계약서 인쇄 / PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- 상단 컨트롤 바: 계약 트랙 선택 & 시나리오 프리셋 -->
+  <section class="control-ribbon no-print">
+    <div class="track-selector" role="tablist" aria-label="위수탁 계약 도메인 트랙 선택">
+      <span class="ribbon-label">계약 도메인 트랙</span>
+      <button type="button" class="track-btn active" data-track="HYBRID">
+        <span class="track-dot hybrid"></span>
+        공공 민간위탁 + 개인정보 통합 협약 <span class="badge-rec">실무 권장</span>
+      </button>
+      <button type="button" class="track-btn" data-track="PRIVACY">
+        <span class="track-dot privacy"></span>
+        개인정보 처리 위·수탁 표준계약서 (법 제26조)
+      </button>
+      <button type="button" class="track-btn" data-track="PUBLIC">
+        <span class="track-dot public"></span>
+        공공·지자체 행정사무 민간위탁 표준협약서
+      </button>
+    </div>
+
+    <div class="preset-selector">
+      <span class="ribbon-label">실무 프리셋 시연</span>
+      <button type="button" class="preset-chip" id="presetFlawed">
+        ⚠️ 구버전 부실·누락 계약서 체험 (42점 → 단점 개선 시연)
+      </button>
+      <button type="button" class="preset-chip" id="presetPrivacyCS">
+        🔒 IT·고객상담(CS) 개인정보 위수탁 (100점)
+      </button>
+      <button type="button" class="preset-chip" id="presetPublicWelfare">
+        🏛️ 지자체 공공시설·복지 민간위탁 통합 (100점)
+      </button>
+    </div>
+  </section>
+
+  <!-- 메인 스플릿 워크스페이스 -->
+  <main class="workspace-grid">
+    <!-- 좌측: 스마트 입력 & 법령 컴플라이언스 린터 패널 -->
+    <aside class="editor-pane no-print">
+      
+      <!-- 1. 실시간 법령 컴플라이언스 린터 카드 (핵심 단점 개선 엔진) -->
+      <section class="card linter-card" id="linterCard">
+        <div class="linter-header">
+          <div>
+            <div class="section-eyebrow">REAL-TIME COMPLIANCE LINTER</div>
+            <h2 class="card-title">법정 필수조항 & 단점 개선 검증기</h2>
+          </div>
+          <div class="score-badge-wrap">
+            <span class="score-label">컴플라이언스 지수</span>
+            <div class="score-number" id="complianceScore">100<span class="score-unit">/100</span></div>
+          </div>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" id="complianceProgressBar" style="width: 100%;"></div>
+        </div>
+
+        <div class="linter-summary-bar">
+          <span id="linterStatusText" class="linter-status-ok">✅ 법정 필수 기재사항 및 권익 보호 조항이 모두 충족되었습니다.</span>
+          <button type="button" class="btn btn-fix-all" id="btnAutoFixAll">
+            ✨ 누락·독소조항 원클릭 자동 보완
+          </button>
+        </div>
+
+        <div class="linter-checklist" id="linterChecklist">
+          <!-- JS에서 10대 법정 체크포인트 동적 렌더링 -->
+        </div>
+      </section>
+
+      <!-- 2. 계약 기본 정보 및 당사자 -->
+      <section class="card form-section">
+        <div class="section-header">
+          <span class="step-num">01</span>
+          <div>
+            <h3 class="section-title">계약 기본정보 및 당사자 (위탁자 · 수탁자)</h3>
+            <p class="section-sub">사후 관리·감독 단절 방지를 위해 양측 관리책임자(CPO/감독관)를 반드시 특정합니다.</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="contractTitle">계약(협약)서 명칭</label>
+            <input type="text" id="contractTitle" class="form-input" value="서울특별시 청년창업지원센터 운영 민간위탁 및 개인정보 처리 위·수탁 협약서" />
+          </div>
+          <div class="form-group">
+            <label for="startDate">위탁 시작일</label>
+            <input type="date" id="startDate" class="form-input" value="2026-11-01" />
+          </div>
+          <div class="form-group">
+            <label for="endDate">위탁 종료일</label>
+            <input type="date" id="endDate" class="form-input" value="2029-10-31" />
+          </div>
+        </div>
+
+        <div class="party-columns">
+          <!-- 위탁자 -->
+          <div class="party-box">
+            <div class="party-box-title">위탁자 (위탁기관 / 도급인)</div>
+            <div class="form-group">
+              <label for="consignorName">기관/기업명</label>
+              <input type="text" id="consignorName" class="form-input" value="서울특별시 미래청년기획단" />
+            </div>
+            <div class="form-group">
+              <label for="consignorRep">대표자(기관장)</label>
+              <input type="text" id="consignorRep" class="form-input" value="김서울" />
+            </div>
+            <div class="form-group">
+              <label for="consignorBizNo">사업자/고유번호</label>
+              <input type="text" id="consignorBizNo" class="form-input" value="104-83-00469" />
+            </div>
+            <div class="form-group">
+              <label for="consignorAddress">소재지 주소</label>
+              <input type="text" id="consignorAddress" class="form-input" value="서울특별시 중구 세종대로 110" />
+            </div>
+            <div class="form-group">
+              <label for="consignorManager">관리·감독 책임자 및 연락처 <span class="req-tag">법정권장</span></label>
+              <input type="text" id="consignorManager" class="form-input" value="이감독 사무관 (02-2133-0000 / audit@seoul.go.kr)" />
+            </div>
+          </div>
+
+          <!-- 수탁자 -->
+          <div class="party-box">
+            <div class="party-box-title">수탁자 (수탁기관 / 수급인)</div>
+            <div class="form-group">
+              <label for="consigneeName">기관/기업명</label>
+              <input type="text" id="consigneeName" class="form-input" value="(재)한국창업혁신네트워크" />
+            </div>
+            <div class="form-group">
+              <label for="consigneeRep">대표자</label>
+              <input type="text" id="consigneeRep" class="form-input" value="박수탁" />
+            </div>
+            <div class="form-group">
+              <label for="consigneeBizNo">사업자/법인번호</label>
+              <input type="text" id="consigneeBizNo" class="form-input" value="214-82-15920" />
+            </div>
+            <div class="form-group">
+              <label for="consigneeAddress">소재지 주소</label>
+              <input type="text" id="consigneeAddress" class="form-input" value="서울특별시 강남구 테헤란로 211, 8층" />
+            </div>
+            <div class="form-group">
+              <label for="consigneeCpo">개인정보보호책임자(CPO)/연락처 <span class="req-tag">필수특정</span></label>
+              <input type="text" id="consigneeCpo" class="form-input" value="최보안 센터장 (02-555-8899 / cpo@kin.or.kr)" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. 위탁업무의 목적·범위 및 개인정보 보호조치 설정 -->
+      <section class="card form-section" id="sectionPrivacyScope">
+        <div class="section-header">
+          <span class="step-num">02</span>
+          <div>
+            <h3 class="section-title">위탁업무 범위 · 개인정보 항목 및 위험도 맞춤형 보호조치</h3>
+            <p class="section-sub">개인정보보호법 제26조 제1항 및 안전성 확보조치 기준 고시를 반영하여 구체적으로 특정합니다.</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="taskPurpose">위탁업무의 구체적 목적 및 범위 <span class="req-tag">법 제26조 제1항</span></label>
+            <textarea id="taskPurpose" class="form-textarea" rows="3">1. 청년창업지원센터 시설 운영 및 입주기업 보육·멘토링 프로그램 운영 사무
+2. 창업지원 사업 신청자 접수, 자격 심사, 만족도 조사 및 민원 상담 시스템 운영
+3. 창업지원금 정산 관리 및 센터 정보시스템(웹사이트·알림톡) 유지관리</textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="dataScale">취급 정보주체 규모 (위험도 매핑 기준)</label>
+            <select id="dataScale" class="form-select">
+              <option value="UNDER_10K">1만 명 미만 (소규모·기본 보호조치)</option>
+              <option value="10K_TO_100K" selected>1만 명 이상 ~ 10만 명 미만 (중규모·표준 보호조치)</option>
+              <option value="OVER_100K">10만 명 이상 / 대량 처리 (고위험·강화된 통제 및 접속기록 2년)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="accessControlLevel">수탁사 접근통제 및 암호화 수준</label>
+            <select id="accessControlLevel" class="form-select">
+              <option value="STRICT_MFA" selected>강화 (VPN 보안접속 + 2차인증(MFA) + DB/전송구간 암호화)</option>
+              <option value="STANDARD">표준 (접근권한 차등 부여 + 비밀번호/전송구간 암호화)</option>
+              <option value="WEAK">미흡/단순 서면관리 (⚠️ 법령 위반 위험 경고)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 개인정보 항목 태그 빌더 -->
+        <div class="tag-builder-box">
+          <div class="tag-builder-header">
+            <label>처리하는 개인정보 항목 특정 <span class="req-tag">클릭하여 포함/제외</span></label>
+            <span class="tag-hint">고유식별·민감정보 선택 시 법정 암호화 및 별도 동의 확인 조항이 자동 삽입됩니다.</span>
+          </div>
+
+          <div class="tag-category">
+            <span class="tag-cat-name">일반 개인정보</span>
+            <div class="tag-list" id="generalDataTags">
+              <button type="button" class="data-tag active" data-item="성명">성명</button>
+              <button type="button" class="data-tag active" data-item="생년월일">생년월일</button>
+              <button type="button" class="data-tag active" data-item="휴대전화번호">휴대전화번호</button>
+              <button type="button" class="data-tag active" data-item="이메일 주소">이메일 주소</button>
+              <button type="button" class="data-tag active" data-item="자택/사업장 주소">자택/사업장 주소</button>
+              <button type="button" class="data-tag active" data-item="계좌번호(정산용)">계좌번호(정산용)</button>
+              <button type="button" class="data-tag active" data-item="서비스 이용기록·접속로그">서비스 이용기록·접속로그</button>
+              <button type="button" class="data-tag" data-item="CI/DI(본인확인값)">CI/DI(본인확인값)</button>
+            </div>
+          </div>
+
+          <div class="tag-category">
+            <span class="tag-cat-name warn">고유식별정보 (법 제24조)</span>
+            <div class="tag-list" id="uniqueDataTags">
+              <button type="button" class="data-tag active" data-item="주민등록번호(세법/법령근거 시)">주민등록번호(법령근거 시)</button>
+              <button type="button" class="data-tag" data-item="운전면허번호">운전면허번호</button>
+              <button type="button" class="data-tag" data-item="여권번호">여권번호</button>
+              <button type="button" class="data-tag" data-item="외국인등록번호">외국인등록번호</button>
+            </div>
+          </div>
+
+          <div class="tag-category">
+            <span class="tag-cat-name danger">민감정보 (법 제23조)</span>
+            <div class="tag-list" id="sensitiveDataTags">
+              <button type="button" class="data-tag" data-item="건강·장애정보(복지지원용)">건강·장애정보</button>
+              <button type="button" class="data-tag" data-item="범죄경력자료(아동·청소년 관련 법령근거)">범죄경력자료(법령근거)</button>
+              <button type="button" class="data-tag" data-item="생체인식정보">생체인식정보</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid three-col" style="margin-top: 12px;">
+          <div class="form-group">
+            <label for="inspectionFreq">실태점검 주기 (법 제26조 제4항)</label>
+            <select id="inspectionFreq" class="form-select">
+              <option value="SEMI_ANNUAL" selected>반기별 1회 이상 (연 2회 현장·서면)</option>
+              <option value="ANNUAL">연 1회 이상 정기 실태점검</option>
+              <option value="NONE">점검 주기 미지정 (⚠️ 단점 경고)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="destructionDays">종료 후 파기 및 확인서 제출기한</label>
+            <select id="destructionDays" class="form-select">
+              <option value="5" selected>종료 후 5일 이내 파기 + 파기확인서 제출</option>
+              <option value="7">종료 후 7일 이내 파기 + 파기확인서 제출</option>
+              <option value="14">종료 후 14일 이내 파기 + 파기확인서 제출</option>
+              <option value="0">기한/파기확인서 미지정 (⚠️ 유출위험 경고)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="liabilityClause">법 제26조 제6항 손해배상·소속직원 간주</label>
+            <select id="liabilityClause" class="form-select">
+              <option value="STRICT" selected>적용 (위탁자 소속직원 간주 + 구상권 명시)</option>
+              <option value="OMIT">미적용/수탁자 단독책임 전가 (⚠️ 법위반 경고)</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. 재위탁(Sub-processing) 투명성 매트릭스 빌더 (단점 3 개선) -->
+      <section class="card form-section">
+        <div class="section-header">
+          <span class="step-num">03</span>
+          <div>
+            <h3 class="section-title">재위탁(제3자 하도급·클라우드) 통제 매트릭스</h3>
+            <p class="section-sub">논문·실태조사 최다 적발 사유인 '무단 다단계 재위탁'을 통제하고 [별표] 명세를 자동 생성합니다.</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="subPolicy">재위탁 허용 정책 (개인정보보호법 제26조 제6항 / 민간위탁 지침)</label>
+          <select id="subPolicy" class="form-select">
+            <option value="PRE_APPROVED_LIST" selected>사전 서면승인 원칙 + 본 계약 시 지정 재수탁사 동시 승인 ([별표] 자동 연동)</option>
+            <option value="STRICT_PROHIBIT">재위탁 전면 금지 (위탁자의 개별 사전 서면 승낙 없이는 제3자 재위탁 일체 불가)</option>
+            <option value="UNRESTRICTED">수탁자 임의 재위탁 허용 (⚠️ 법 제26조 위반 · 컴플라이언스 경고)</option>
+          </select>
+        </div>
+
+        <div id="subProcessorContainer" class="subprocessor-box">
+          <div class="subprocessor-bar">
+            <span class="subprocessor-title">📋 사전 승인된 재수탁사(Sub-processor) 명세표</span>
+            <button type="button" class="btn btn-sm btn-outline" id="btnAddSubProcessor">+ 재수탁사 행 추가</button>
+          </div>
+          <div class="subprocessor-list" id="subProcessorList">
+            <!-- JS에서 동적 렌더링 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. 공공·지자체 민간위탁 특화 거버넌스 (고용승계·정산·성과평가) -->
+      <section class="card form-section" id="sectionPublicTerms">
+        <div class="section-header">
+          <span class="step-num">04</span>
+          <div>
+            <h3 class="section-title">공공·지자체 민간위탁 정산 · 근로자 보호 · 성과평가</h3>
+            <p class="section-sub">한국지방행정연구원·국회입법조사처 보고서가 지적한 원가정산 모호성 및 고용불안 문제를 해결합니다.</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="budgetAmount">연간 위탁운영비 예산 (원)</label>
+            <input type="number" id="budgetAmount" class="form-input" value="480000000" step="1000000" />
+            <span class="field-helper" id="budgetKoreanText">금 사억팔천만원정 (₩480,000,000)</span>
+          </div>
+
+          <div class="form-group">
+            <label for="settlementType">사업비 교부·정산 및 회계감사 방식</label>
+            <select id="settlementType" class="form-select">
+              <option value="AUDIT_SETTLE" selected>정산형 (전용계좌 + 집행잔액/이자 반납 + 외부 공인회계사 회계감사)</option>
+              <option value="BASIC_SETTLE">정산형 (전용계좌 + 회계연도 종료 후 정산보고서 제출)</option>
+              <option value="LUMP_SUM">총액도급형 / 정산 미실시 (⚠️ 민간위탁 감사 지적 위험)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="employmentRate">민간위탁 노동자 고용승계 및 처우보호</label>
+            <select id="employmentRate" class="form-select">
+              <option value="80" selected>고용승계 80% 이상 보장 + 책정 인건비 준수 + 분기별 임금명세 제출</option>
+              <option value="100">고용승계 100% 원칙 보장 + 퇴직급여충당금 별도 계좌 적립</option>
+              <option value="NONE">고용승계 및 근로조건 보호 조항 미포함 (⚠️ 가이드라인 미준수)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="perfEvalDays">종합성과평가 및 재계약 심사 연동</label>
+            <select id="perfEvalDays" class="form-select">
+              <option value="90" selected>협약 만료 90일 전 종합성과평가 실시 + 재위탁/재계약 심사 의무 반영</option>
+              <option value="60">협약 만료 60일 전 성과평가 실시</option>
+              <option value="0">성과평가 미연동 / 자동 연장 (⚠️ 관행적 위탁 연장 경고)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="jurisdictionCourt">관할 법원 및 분쟁 해결</label>
+            <input type="text" id="jurisdictionCourt" class="form-input" value="서울중앙지방법원 (개인정보 분쟁조정위원회 조정 병행)" />
+          </div>
+
+          <div class="form-group">
+            <label for="contractDate">계약(협약) 체결일</label>
+            <input type="date" id="contractDate" class="form-input" value="2026-10-25" />
+          </div>
+        </div>
+      </section>
+
+    </aside>
+
+    <!-- 우측: 실시간 계약서 & 부속서류 프리뷰 캔버스 -->
+    <section class="preview-pane">
+      <!-- 상단 문서 탭 바 -->
+      <div class="preview-toolbar no-print">
+        <div class="doc-tabs" role="tablist">
+          <button type="button" class="doc-tab active" data-doc="MAIN_CONTRACT">
+            📄 본 위·수탁 계약서(협약서)
+          </button>
+          <button type="button" class="doc-tab" data-doc="SECURITY_PLEDGE">
+            🛡️ [별첨1] 보안서약서
+          </button>
+          <button type="button" class="doc-tab" data-doc="DESTRUCTION_CERT">
+            🗑️ [별첨2] 개인정보 파기확인서
+          </button>
+          <button type="button" class="doc-tab" data-doc="AUDIT_CHECKLIST">
+            ✅ [별첨3] 수탁사 실태점검표
+          </button>
+          <button type="button" class="doc-tab" data-doc="LABOR_PLEDGE">
+            🤝 [별첨4] 근로조건 보호·청렴 확약서
+          </button>
+          <button type="button" class="doc-tab highlight-tab" data-doc="LIFECYCLE_RESEARCH">
+            📅 사후관리 일정 & 논문·PDR 허브
+          </button>
+        </div>
+
+        <div class="preview-options">
+          <label class="toggle-label" title="기존 계약서의 단점을 개선한 핵심 조항에 법적 근거와 해설 배지를 표시합니다">
+            <input type="checkbox" id="toggleAnnotations" checked />
+            <span>단점 개선 조항 해설 표시</span>
+          </label>
+          <button type="button" class="btn btn-sm btn-outline" id="btnCopyDocument">
+            📋 현재 문서 복사
+          </button>
+        </div>
+      </div>
+
+      <!-- A4 법률 문서 렌더링 영역 -->
+      <div class="paper-stage">
+        <article class="legal-paper" id="legalPaperContent">
+          <!-- JS에서 현재 선택된 탭의 계약서 / 부속서류 / 타임라인 & PDR 허브 렌더링 -->
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- 모달: 사전 적격성·유형 진단 마법사 (위탁 vs 제3자제공 / 민간위탁 vs 일반용역 구분) -->
+  <div class="modal-backdrop hidden no-print" id="wizardModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <span class="section-eyebrow">SMART CONTRACT TYPE WIZARD</span>
+          <h2 class="modal-title">🧭 위·수탁 계약 적격성 및 유형 자동 진단 마법사</h2>
+          <p class="modal-sub">학술논문(전승재 2022; 한국지방행정연구원)이 지적한 '위탁 vs 제3자 제공' 및 '민간위탁 협약 vs 일반 용역계약' 오판을 방지합니다.</p>
+        </div>
+        <button type="button" class="btn-close" id="btnCloseWizard" aria-label="닫기">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="wizard-questions">
+          <div class="wiz-q-card">
+            <div class="wiz-q-title">Q1. 상대방(수탁자)이 개인정보나 데이터를 누구의 목적과 이익을 위해 처리합니까?</div>
+            <div class="wiz-options">
+              <label class="wiz-radio">
+                <input type="radio" name="wiz_q1" value="CONSIGNOR" checked />
+                <span><strong>위탁자(우리 기관·기업)의 본래 업무 목적 범위 내</strong>에서만 대행 처리하며, 상대방은 위탁 수수료(용역비)만 받습니다. (➔ 처리위탁)</span>
+              </label>
+              <label class="wiz-radio">
+                <input type="radio" name="wiz_q1" value="THIRD_PARTY" />
+                <span>상대방이 <strong>자신의 독자적인 영업·마케팅·AI 학습 목적</strong>으로 데이터를 활용하고 그로 인한 고유의 이익을 얻습니다. (➔ 제3자 제공 또는 공동처리)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="wiz-q-card">
+            <div class="wiz-q-title">Q2. 위탁 주체가 지방자치단체·공공기관이며, 대민 공공서비스나 공공시설 운영 사무를 맡기는 것입니까?</div>
+            <div class="wiz-options">
+              <label class="wiz-radio">
+                <input type="radio" name="wiz_q2" value="PUBLIC_ADMIN" checked />
+                <span><strong>예 (행정사무 민간위탁)</strong>: 지자체·공공기관의 권한에 속하는 공공시설(복지관·창업센터·체육시설 등) 운영이나 대민 행정사무를 법인·단체에 맡깁니다.</span>
+              </label>
+              <label class="wiz-radio">
+                <input type="radio" name="wiz_q2" value="PUBLIC_PROCUREMENT" />
+                <span><strong>단순 조달·용역</strong>: 행정사무 권한 이전 없이 단순 청소·경비·시설물 수리·전산시스템 유지보수 용역만 발주합니다.</span>
+              </label>
+              <label class="wiz-radio">
+                <input type="radio" name="wiz_q2" value="PRIVATE_CORP" />
+                <span><strong>민간 기업 간 거래(B2B)</strong>: 민간 기업이 고객센터, 물류배송, 클라우드, 마케팅 대행 등을 외부 업체에 위탁합니다.</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="wiz-q-card">
+            <div class="wiz-q-title">Q3. 해당 업무 수행 과정에서 시민·고객·임직원의 개인정보(성명, 연락처, 주민번호 등)를 취급합니까?</div>
+            <div class="wiz-options">
+              <label class="wiz-radio">
+                <input type="radio" name="wiz_q3" value="YES_HIGH" checked />
+                <span><strong>예 (고유식별·민감정보 또는 1만 명 이상 개인정보 포함)</strong></span>
+              </label>
+              <label class="wiz-radio">
+                <input type="radio" name="wiz_q3" value="YES_GENERAL" />
+                <span><strong>예 (소규모 일반 개인정보만 포함)</strong></span>
+              </label>
+              <label class="wiz-radio">
+                <input type="radio" name="wiz_q3" value="NO_PRIVACY" />
+                <span><strong>아니오 (개인정보 취급 일체 없음)</strong></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="wiz-q-card">
+            <div class="wiz-q-title">Q4. 수탁자가 클라우드(AWS·네이버클라우드 등), 문자발송 대행사, 하위 협력사 등 제3자에게 업무 일부를 다시 맡길 가능성이 있습니까?</div>
+            <div class="wiz-options">
+              <label class="wiz-radio">
+                <input type="radio" name="wiz_q4" value="SUB_YES" checked />
+                <span><strong>예</strong>: 클라우드 인프라 사용 또는 일부 전문 영역의 재위탁(Sub-processing)이 필요합니다.</span>
+              </label>
+              <label class="wiz-radio">
+                <input type="radio" name="wiz_q4" value="SUB_NO" />
+                <span><strong>아니오</strong>: 수탁자가 100% 자체 인력과 자체 서버로만 수행해야 합니다.</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-result-box" id="wizardResultBox">
+          <!-- 진단 결과 실시간 표시 -->
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="btnCancelWizard">닫기</button>
+        <button type="button" class="btn btn-primary" id="btnApplyWizard">
+          ✨ 진단 결과에 맞춰 최적 계약 트랙 & 보호조항 자동 설정
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 토스트 알림 -->
+  <div id="toastNotification" class="toast hidden no-print"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
